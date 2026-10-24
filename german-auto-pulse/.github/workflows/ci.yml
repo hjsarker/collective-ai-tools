@@ -15,8 +15,11 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
+      - run: python -m pipeline.global_ev
       - run: python -m pipeline.main --offline
+      - run: python build_standalone.py
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node --check web/app.js
+      - run: node --check web/global.js

@@ -1,85 +1,87 @@
-# German Auto Pulse
+# Auto Pulse: Global Automotive Market Intelligence
 
 **Live dashboard:** https://german-auto-pulse.vercel.app/  
-**Public source code:** https://github.com/hjsarker/collective-ai-tools/tree/main/german-auto-pulse
+**Focus:** International EV adoption and market momentum, with a dedicated German passenger-car industry deep dive.
 
-**An interactive, source-aware portfolio dashboard for Germany's passenger-car market.**
+A public data-analytics portfolio project built to make country-level comparisons understandable in seconds. Uses real IEA data from Our World in Data (2020–2025) for international comparisons, plus published KBA/VDA figures through September 2026 for Germany.
 
-Track new passenger car registrations, brand competition, battery-electric adoption, German production and factory exports. The frontend is a fast static website and the update pipeline is Python + SQL. No paid API, backend, or database hosting is required.
+## What to explore
 
-## Data through September 2026
+1. **Global overview:** country picker, year selector, adoption share, EV sales volume, BEV mix, EV share of the car fleet, 32 searchable country markets, regional rankings and a short data-driven story.
+2. **Compare countries:** select any two markets and the same annual metric. See a six-year trend chart, gap in percentage points or vehicle units, and annual change.
+3. **Germany deep dive:** monthly 2026 passenger-car registrations, brand competition, September BEV/PHEV breakdown, production and vehicle export counts, data-quality checks.
 
-Built from VDA/KBA public monthly figures and KBA-derived registration summaries. Includes January–September 2026 monthly registrations, 2022–2025 completed annual totals, September 2026 VDA data for BEV/PHEV and production/export, top 20 brand YTD ranking and top 8 September brands. These are **verified snapshot values**, not simulated time series. Official definitions and limitations are in [`docs/methodology.md`](docs/methodology.md).
+The dashboard deliberately separates:
 
-## Features
+- **EV adoption share:** battery-electric plus plug-in hybrid as a percentage of *new* passenger cars sold.
+- **EV sales:** number of new BEVs and PHEVs, not all cars produced.
+- **BEV share of EV sales:** proportion of electric-car sales that were fully battery-electric, *not* percentage of all new cars.
+- **EV stock share:** fraction of all cars currently in use that are EVs.
+- **German production and exports:** 2026 KBA/VDA counts, not 2025 IEA EV sales, and not company revenue.
 
-- Modern responsive single-page dashboard, accessible on phones or desktops
-- Monthly time-series chart with per-point tooltips
-- Brand ranking, live search and year-to-date/month toggle
-- Market-share calculations and electrification breakdown
-- Manufacturing output and factory export indicators
-- Three data-driven analytical insights and downloadable JSON
-- Source and dataset freshness transparency, source links, data checks
-- Python ingestion of the official current VDA table, strict validation, SQL window analytics and CI tests
-- GitHub Pages deployment plus daily source checks, with safe failure behavior
+These figures are not ranked as a single overall measure of industrial competitiveness. A country can be a large manufacturer without having high domestic EV adoption.
 
-## Run locally
+## Data coverage and sources
+
+| Component | Period | Source |
+| --- | --- | --- |
+| International adoption, EV sales, BEV sales mix, fleet share | 2020–2025 full calendar years | [Our World in Data, IEA Global EV Outlook 2026](https://ourworldindata.org/electric-car-sales) |
+| Monthly car registrations and brand ranking, Germany | Jan–Sep 2026 | [KBA](https://www.kba.de/DE/Statistik/Fahrzeuge/Neuzulassungen/MonatlicheNeuzulassungen/monatl_neuzulassungen_node.html) and cross-checks |
+| German production, factory exports, BEV/PHEV in latest September release | Sep 2026 | [VDA](https://www.vda.de/de/aktuelles/zahlen-und-daten/monatszahlen) |
+
+See [methodology](docs/methodology.md) for definitions, scopes, limitations and source licences. Country comparison uses the *same* international data vintage and year. It must not be combined numerically with the newer German partial-year monthly view.
+
+## Stack
+
+- **Data ingestion:** Python standard library CSV and HTTP client, KBA/VDA parser.
+- **SQL analytics:** SQLite (standard library) with LAG, DENSE_RANK and year-on-year volume/share changes, independent of external database services.
+- **Data quality:** schema checks, country coverage, historical data checks, percentage bounds and reconciliation with published German YTD counts. 10 pytest tests.
+- **Web:** vanilla JavaScript, semantic HTML, custom responsive CSS and accessible SVG charts. No runtime dependencies, no tracking and no backend.
+- **Publishing:** static files suitable for GitHub Pages or Vercel. A one-file standalone production build is included for simple hosting.
+
+## Quick start
 
 ```bash
 cd german-auto-pulse
 python -m http.server 8000 --directory web
-# Open http://localhost:8000
+# http://localhost:8000
 ```
 
-Run offline validation and SQL analytics:
+No Node installation is required.
+
+Run the tests and reproduce SQL analytics:
 
 ```bash
 python -m pip install -r requirements.txt
 python -m pytest -q
+python -m pipeline.global_ev
 python -m pipeline.main --offline
 ```
 
-Fetch and verify the latest VDA release:
+Update international data from Our World in Data when the annual IEA release changes:
 
 ```bash
-python -m pipeline.main
+python -m pipeline.global_ev --refresh
+python -m pytest -q
+python build_standalone.py
 ```
 
-This fetch may fail if VDA changes its published table structure or blocks automated traffic. In that case it fails visibly rather than storing guessed data. The original validated snapshot is left unchanged.
+The global ingestion validates four independent CSV datasets **before** replacing either stored data file. If downloads fail or data are malformed, the previous validated snapshot is preserved. To refresh German monthly figures, use `python -m pipeline.main` (subject to VDA access and schema stability).
 
-## Deploy to free GitHub Pages after moving to a standalone repository
+## Free deploy
 
-1. For a standalone repository, create a **new public repository** `german-auto-pulse` and push this directory to its `main` branch.
-2. Under **Settings → Pages → Build and deployment**, select **GitHub Actions**.
-3. Run the `Refresh official data and deploy` workflow once using **Actions → Run workflow**.
-4. Your URL should be `https://YOUR-USERNAME.github.io/german-auto-pulse/`.
+To deploy to GitHub Pages from a dedicated public repository:
 
-The current live Vercel site is a deployed, self-contained **September 2026 snapshot**. It does not automatically republish updated data, since the connected Vercel account does not currently have a GitHub Git integration. When running from a standalone repository with Actions and Pages configured, the workflow can refresh and publish automatically. Because this is a static site, it has no always-on compute cost. GitHub Actions normally runs free for public repositories. Newer VDA data is ingested when accessible and reconcilable. The workflow does not currently ingest updated brand rankings from KBA automatically; those remain visibly scoped to their reporting month.
+1. Upload the project directory to the repository root.
+2. In **Settings > Pages**, select **GitHub Actions** as the build source.
+3. Run `.github/workflows/refresh-and-deploy.yml` from **Actions** once.
 
-## Architecture
+The existing GitHub showcase folder is not itself a repository root, so nested workflows in that folder do not trigger automatically. This is a documented limitation rather than a silently assumed live refresh. The production Vercel snapshot is published separately, and is not necessarily linked to GitHub Actions until the project is connected to Git deployment.
 
-```text
-VDA monthly official HTML ─┐
-                           ├─> Python ingestion + validation ─> market.json
-KBA-sourced baseline ──────┘                                      │
-                                                                  v
-                                       SQL analytic windows (DuckDB)
-                                                                  │
-                                                                  v
-                                                  Static JavaScript dashboard
-                                                                  │
-                                                                  v
-                                                        GitHub Pages
-```
+## Portfolio story
 
-## Reproducibility and data quality
+This project demonstrates standardized cross-market analysis, correct denominator and reporting-period handling, SQL window functions, data validation, report-friendly storytelling, UI design and static delivery at near-zero running cost. The dashboard uses only source-grounded observations: no fictional time series and no unsupported forecasts.
 
-Automated checks ensure that monthly counts sum to the current YTD official figure and the BEV+PHEV monthly total matches the electrified total. Data for missing months is never fabricated. If a new calendar year begins, the automation requests a manual rollover rather than blending incompatible YTD windows. Source access, preliminary figures, revision risk and licence caveats are documented.
+## Credits and licences
 
-## Technology
-
-Python, pandas, DuckDB or local SQLite compatibility for offline analytics, SQL window functions, pytest, vanilla JavaScript, semantic HTML, modern CSS, SVG visualization, GitHub Actions and GitHub Pages. Designed with no frontend dependencies for a lightweight static site.
-
-## License
-
-The project code is released under the MIT licence. Source datasets retain their original attribution/licence conditions. The project is not affiliated with the data publishers.
+Dashboard code: MIT (see LICENSE). Data: third-party sources retain their own licensing. OWID chart content is presented under CC BY with attribution to IEA Global EV Outlook 2026, and the individual publisher's usage terms also apply. This project is not affiliated with any source publisher.

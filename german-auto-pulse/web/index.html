@@ -4,38 +4,44 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#081523" />
-  <meta name="description" content="German Auto Pulse: independent analysis of Germany's vehicle registrations, brands, electric vehicles, manufacturing and exports using KBA and VDA figures." />
-  <title>German Auto Pulse | Automotive Industry Intelligence</title>
+  <meta name="description" content="Auto Pulse: compare global electric vehicle adoption, market growth and manufacturing. Independent IEA and KBA/VDA data analysis." />
+  <title>Auto Pulse | Global Automotive Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
+  <script src="./global.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Main navigation">
-      <div class="identity"><div class="brand-mark"><span>AP</span></div><div><strong>AUTO<span>PULSE</span></strong><small>GERMANY INTELLIGENCE</small></div></div>
-      <div class="sidebar-group-label">WORKSPACE</div>
+      <div class="identity"><div class="brand-mark"><span>AP</span></div><div><strong>AUTO<span>PULSE</span></strong><small>GLOBAL AUTOMOTIVE INTELLIGENCE</small></div></div>
+      <div class="sidebar-group-label">EXPLORE MARKETS</div>
       <nav id="nav" class="nav">
-        <button class="nav-button active" data-view="overview"><span class="nav-ico">◫</span> Overview</button>
+        <button class="nav-button active" data-view="global"><span class="nav-ico">◎</span> Global overview</button>
+        <button class="nav-button" data-view="compare"><span class="nav-ico">⇄</span> Compare countries</button>
+        <div class="sidebar-group-label section-divider">GERMANY DEEP DIVE</div>
+        <button class="nav-button" data-view="overview"><span class="nav-ico">◫</span> Germany overview</button>
         <button class="nav-button" data-view="brands"><span class="nav-ico">▥</span> Brand intelligence</button>
         <button class="nav-button" data-view="electric"><span class="nav-ico">ϟ</span> EV transition</button>
         <button class="nav-button" data-view="production"><span class="nav-ico">▤</span> Manufacturing</button>
         <button class="nav-button" data-view="sources"><span class="nav-ico">◎</span> Sources & quality</button>
       </nav>
-      <div class="sidebar-bottom"><div class="data-indicator"><span class="status-pulse"></span> Verified source snapshot</div><p>Official KBA and VDA automotive data. An independent portfolio analysis.</p><a href="https://github.com/hjsarker/collective-ai-tools/tree/main/german-auto-pulse" target="_blank" rel="noopener">Project source ↗</a></div>
+      <div class="sidebar-bottom"><div class="data-indicator"><span class="status-pulse"></span> International data · 2025</div><p>IEA worldwide EV benchmarks and KBA/VDA Germany deep dive. Transparent reporting periods.</p><a href="https://github.com/hjsarker/collective-ai-tools/tree/main/german-auto-pulse" target="_blank" rel="noopener">Project source ↗</a></div>
     </aside>
     <main class="main">
-      <header class="topbar"><div class="breadcrumb">MARKET MONITOR <span>/</span> <b id="crumb">OVERVIEW</b></div><div class="top-actions"><span class="report-date">LATEST REPORT <b id="report-date">SEP 2026</b></span><button id="download" class="header-button">↓ Export data</button></div></header>
+      <header class="topbar"><div class="breadcrumb">MARKET MONITOR <span>/</span> <b id="crumb">OVERVIEW</b></div><div class="top-actions"><span class="report-date">REPORT PERIOD <b id="report-date">2025</b></span><button id="download" class="header-button">↓ Export data</button></div></header>
       <div class="content">
-        <section class="hero"><div class="eyebrow"><span class="live-dot"></span> GERMAN AUTOMOTIVE MARKET <span class="tiny-separator">/</span> MONTHLY INTELLIGENCE</div><div class="hero-grid"><div><h1 id="page-title">The market, <em>in motion.</em></h1><p id="page-description">A clear view of Germany's car registrations, electric transition, and manufacturing performance, built from published industry statistics.</p></div><div class="hero-date"><span>DATA THROUGH</span><strong id="report-period">SEP '26</strong><small>Most recent published reporting period</small></div></div></section>
+        <section class="hero"><div class="eyebrow"><span class="live-dot"></span> GLOBAL AUTOMOTIVE MARKETS <span class="tiny-separator">/</span> COMPARABLE ANNUAL INTELLIGENCE</div><div class="hero-grid"><div><h1 id="page-title">Global mobility, <em>explained.</em></h1><p id="page-description">One dashboard to understand electric car adoption, market momentum and the differences between countries.</p></div><div class="hero-date"><span>DATA THROUGH</span><strong id="report-period">2025</strong><small>Latest comparable global annual release</small></div></div></section>
+        <section id="view-global" class="view active" aria-label="Global overview"></section>
+        <section id="view-compare" class="view" aria-label="Country comparison"></section>
         <section id="view-overview" class="view active" aria-label="Overview"></section>
         <section id="view-brands" class="view" aria-label="Brand intelligence"></section>
         <section id="view-electric" class="view" aria-label="EV transition"></section>
         <section id="view-production" class="view" aria-label="Manufacturing"></section>
         <section id="view-sources" class="view" aria-label="Sources and data quality"></section>
-        <footer><span>GERMAN AUTO PULSE <span class="sep">/</span> PUBLIC DATA, EXPLAINED</span><span id="footer-update">Reporting period: September 2026</span></footer>
+        <footer><span>AUTO PULSE <span class="sep">/</span> PUBLIC DATA, EXPLAINED</span><span id="footer-update">International annual data through 2025</span></footer>
       </div>
     </main>
   </div>
