@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "title": "German Auto Pulse",
+    "reporting_period": "2026-09",
+    "data_as_of": "2026-10-24",
+    "last_source_check": null,
+    "last_successful_refresh": null,
+    "status": "verified published snapshot",
+    "description": "Monthly registration totals are KBA-derived. September industry figures are from the VDA/KBA monthly release. Counts represent new registrations, not retail sales.",
+    "sources": [
+      {
+        "name": "VDA / KBA September 2026 monthly figures",
+        "url": "https://www.vda.de/de/aktuelles/zahlen-und-daten/monatszahlen"
+      },
+      {
+        "name": "KBA new registrations FZ 10 (GovData)",
+        "url": "https://data.gov.de/suche/daten/fz-10-jahr-2026-neuzulassungen-von-personenkraftwagen-nach-marken-und-modellreihen"
+      },
+      {
+        "name": "KBA-derived monthly and brand ranking cross-check",
+        "url": "https://autostatistiken.de/auto-zulassungszahlen-2026/"
+      },
+      {
+        "name": "KBA-derived September brand values cross-check",
+        "url": "https://fahrzeugstatistik.de/neuzulassungen"
+      }
+    ]
+  },
+  "registrations_monthly": [
+    {
+      "month": "2026-01",
+      "count": 193981
+    },
+    {
+      "month": "2026-02",
+      "count": 211262
+    },
+    {
+      "month": "2026-03",
+      "count": 294161
+    },
+    {
+      "month": "2026-04",
+      "count": 249163
+    },
+    {
+      "month": "2026-05",
+      "count": 239448
+    },
+    {
+      "month": "2026-06",
+      "count": 296378
+    },
+    {
+      "month": "2026-07",
+      "count": 268068
+    },
+    {
+      "month": "2026-08",
+      "count": 212563
+    },
+    {
+      "month": "2026-09",
+      "count": 256774
+    }
+  ],
+  "annual_registrations": [
+    {
+      "year": 2022,
+      "count": 2651357
+    },
+    {
+      "year": 2023,
+      "count": 2844609
+    },
+    {
+      "year": 2024,
+      "count": 2817331
+    },
+    {
+      "year": 2025,
+      "count": 2857591
+    }
+  ],
+  "latest": {
+    "registrations": 256774,
+    "registrations_yoy_pct": 9,
+    "registrations_ytd": 2221798,
+    "registrations_ytd_yoy_pct": 5,
+    "german_group_brands": 161218,
+    "foreign_brands": 95556,
+    "electric_combined": 116280,
+    "bev": 88599,
+    "phev": 27681,
+    "bev_yoy_pct": 95,
+    "electric_ytd": 851644,
+    "bev_ytd": 604144,
+    "phev_ytd": 247489,
+    "production": 392200,
+    "production_yoy_pct": 0,
+    "production_ytd": 3034900,
+    "production_ytd_yoy_pct": -4,
+    "exports": 288800,
+    "exports_yoy_pct": 1,
+    "exports_ytd": 2294500,
+    "exports_ytd_yoy_pct": -4,
+    "provisional": true
+  },
+  "brands_ytd": [
+    {
+      "brand": "Volkswagen",
+      "registrations": 396444
+    },
+    {
+      "brand": "Mercedes-Benz",
+      "registrations": 194859
+    },
+    {
+      "brand": "BMW",
+      "registrations": 189320
+    },
+    {
+      "brand": "Škoda",
+      "registrations": 186973
+    },
+    {
+      "brand": "Audi",
+      "registrations": 153020
+    },
+    {
+      "brand": "Opel",
+      "registrations": 105375
+    },
+    {
+      "brand": "Ford",
+      "registrations": 74630
+    },
+    {
+      "brand": "Hyundai",
+      "registrations": 71400
+    },
+    {
+      "brand": "SEAT",
+      "registrations": 67758
+    },
+    {
+      "brand": "Dacia",
+      "registrations": 53176
+    },
+    {
+      "brand": "Renault",
+      "registrations": 51348
+    },
+    {
+      "brand": "Fiat",
+      "registrations": 51272
+    },
+    {
+      "brand": "Kia",
+      "registrations": 50047
+    },
+    {
+      "brand": "Toyota",
+      "registrations": 50022
+    },
+    {
+      "brand": "CUPRA",
+      "registrations": 49674
+    },
+    {
+      "brand": "Peugeot",
+      "registrations": 46721
+    },
+    {
+      "brand": "Tesla",
+      "registrations": 44810
+    },
+    {
+      "brand": "BYD",
+      "registrations": 42788
+    },
+    {
+      "brand": "Citroën",
+      "registrations": 40696
+    },
+    {
+      "brand": "Volvo",
+      "registrations": 38454
+    }
+  ],
+  "brands_latest": [
+    {
+      "brand": "Volkswagen",
+      "registrations": 42461
+    },
+    {
+      "brand": "Mercedes-Benz",
+      "registrations": 21595
+    },
+    {
+      "brand": "Škoda",
+      "registrations": 19898
+    },
+    {
+      "brand": "BMW",
+      "registrations": 18924
+    },
+    {
+      "brand": "Audi",
+      "registrations": 16361
+    },
+    {
+      "brand": "Opel",
+      "registrations": 13059
+    },
+    {
+      "brand": "Tesla",
+      "registrations": 12552
+    },
+    {
+      "brand": "Ford",
+      "registrations": 7848
+    }
+  ]
+}
