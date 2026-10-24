@@ -1,5 +1,8 @@
 # German Auto Pulse
 
+**Live dashboard:** https://german-auto-pulse.vercel.app/  
+**Public source code:** https://github.com/hjsarker/collective-ai-tools/tree/main/german-auto-pulse
+
 **An interactive, source-aware portfolio dashboard for Germany's passenger-car market.**
 
 Track new passenger car registrations, brand competition, battery-electric adoption, German production and factory exports. The frontend is a fast static website and the update pipeline is Python + SQL. No paid API, backend, or database hosting is required.
@@ -44,14 +47,14 @@ python -m pipeline.main
 
 This fetch may fail if VDA changes its published table structure or blocks automated traffic. In that case it fails visibly rather than storing guessed data. The original validated snapshot is left unchanged.
 
-## Deploy to free GitHub Pages
+## Deploy to free GitHub Pages after moving to a standalone repository
 
-1. Create a **new public repository** `german-auto-pulse` and push this directory to its `main` branch.
+1. For a standalone repository, create a **new public repository** `german-auto-pulse` and push this directory to its `main` branch.
 2. Under **Settings → Pages → Build and deployment**, select **GitHub Actions**.
 3. Run the `Refresh official data and deploy` workflow once using **Actions → Run workflow**.
 4. Your URL should be `https://YOUR-USERNAME.github.io/german-auto-pulse/`.
 
-Because this is a static site, it has no always-on compute cost. GitHub Actions normally runs free for public repositories. Newer VDA data is ingested when accessible and reconcilable. The workflow does not currently ingest updated brand rankings from KBA automatically; those remain visibly scoped to their reporting month.
+The current live Vercel site is a deployed, self-contained **September 2026 snapshot**. It does not automatically republish updated data, since the connected Vercel account does not currently have a GitHub Git integration. When running from a standalone repository with Actions and Pages configured, the workflow can refresh and publish automatically. Because this is a static site, it has no always-on compute cost. GitHub Actions normally runs free for public repositories. Newer VDA data is ingested when accessible and reconcilable. The workflow does not currently ingest updated brand rankings from KBA automatically; those remain visibly scoped to their reporting month.
 
 ## Architecture
 

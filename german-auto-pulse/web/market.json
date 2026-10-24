@@ -24,7 +24,10 @@
         "name": "KBA-derived September brand values cross-check",
         "url": "https://fahrzeugstatistik.de/neuzulassungen"
       }
-    ]
+    ],
+    "brand_reporting_period": "2026-09",
+    "brand_ytd_total": 2221798,
+    "brand_monthly_total": 256774
   },
   "registrations_monthly": [
     {
