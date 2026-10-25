@@ -1,0 +1,98 @@
+name: Auto Pulse monthly data refresh
+
+on:
+  schedule:
+    - cron: '17 8 1 * *'
+      timezone: 'Europe/Berlin'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-pulse-monthly-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Refresh validated automotive data
+    if: github.repository == 'hjsarker/collective-ai-tools'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: german-auto-pulse
+        shell: bash
+    steps:
+      - name: Check out the public repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: german-auto-pulse/requirements.txt
+
+      - name: Install data pipeline requirements
+        run: python -m pip install -r requirements.txt
+
+      - name: Validate previously published datasets
+        run: |
+          python -m pytest -q
+          python -m pipeline.global_ev
+          python -m pipeline.main --offline
+
+      - name: Check for updated international EV data
+        id: international
+        continue-on-error: true
+        run: python -m pipeline.global_ev --refresh
+
+      - name: Check for updated German data
+        id: germany
+        continue-on-error: true
+        run: python -m pipeline.main
+
+      - name: Validate outputs and rebuild static dashboard
+        run: |
+          python -m pytest -q
+          python -m pipeline.global_ev
+          python -m pipeline.main --offline
+          python build_standalone.py
+
+      - name: Record actual refresh results
+        env:
+          GLOBAL_OUTCOME: ${{ steps.international.outcome }}
+          GERMANY_OUTCOME: ${{ steps.germany.outcome }}
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          data = {
+              'last_attempt_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+              'international_source_check': __import__('os').environ['GLOBAL_OUTCOME'],
+              'german_source_check': __import__('os').environ['GERMANY_OUTCOME'],
+              'note': 'Source checks can succeed without a new publication. Data is only replaced after validation.'
+          }
+          Path('data/refresh_status.json').write_text(json.dumps(data, indent=2) + '\n')
+          PY
+
+      - name: Commit validated data and run status (project folder only)
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- data/global.json data/global_analytics.csv data/market.json data/registration_analytics.csv data/refresh_status.json web/global.json web/market.json deploy-index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: monthly Auto Pulse source check and validated snapshot'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Flag failed upstream source checks
+        if: ${{ steps.international.outcome == 'failure' || steps.germany.outcome == 'failure' }}
+        run: |
+          echo '::warning::At least one official source was unavailable or failed validation. Existing validated data was retained for that source.'
+          exit 1
