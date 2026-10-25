@@ -47,3 +47,22 @@ def test_rejects_inconsistent_ytd():
     baseline['latest']['registrations_ytd']=999
     with pytest.raises(AssertionError):
         validate_market(baseline)
+
+def test_first_month_of_new_year(monkeypatch):
+    """Monthly refresh must not fail just because December rolls into January."""
+    baseline = json.loads(MARKET.read_text())
+    baseline["registrations_monthly"].extend([
+        {"month": "2026-10", "count": 200000},
+        {"month": "2026-11", "count": 250000},
+        {"month": "2026-12", "count": 240000},
+    ])
+    baseline["metadata"]["reporting_period"] = "2026-12"
+    baseline["latest"]["registrations_ytd"] += 690000
+    parsed = parse_vda_html(fake_html())
+    parsed.update(period="2027-01", registrations=200000, registrations_ytd=200000)
+    monkeypatch.setattr("pipeline.main.parse_vda_html", lambda html: parsed)
+    updated, changed = update("ignored test HTML", baseline)
+    assert changed
+    assert updated["metadata"]["reporting_period"] == "2027-01"
+    assert updated["registrations_monthly"][-1] == {"month": "2027-01", "count": 200000}
+    validate_market(updated)
