@@ -76,7 +76,17 @@ To deploy to GitHub Pages from a dedicated public repository:
 2. In **Settings > Pages**, select **GitHub Actions** as the build source.
 3. Run `.github/workflows/refresh-and-deploy.yml` from **Actions** once.
 
-The existing GitHub showcase folder is not itself a repository root, so nested workflows in that folder do not trigger automatically. This is a documented limitation rather than a silently assumed live refresh. The production Vercel snapshot is published separately, and is not necessarily linked to GitHub Actions until the project is connected to Git deployment.
+### Monthly zero-cost refresh
+
+The active workflow file is stored at the actual repository root: [.github/workflows/auto-pulse-monthly.yml](../../.github/workflows/auto-pulse-monthly.yml). It is scheduled for **the 1st of every month at 08:17 Europe/Berlin**, with a manual workflow dispatch option. Public GitHub repositories using standard GitHub-hosted Actions runners do not incur usage charges.
+
+The scheduled script checks OWID's international datasets and VDA's German monthly statistics, validates the results, and commits only files under this project folder. Every check records its source outcomes in `data/refresh_status.json`. If an upstream source fails, its last validated figures are retained and the job is marked failed for visibility.
+
+**Current limitation (October 2026):** automated requests to the VDA source returned HTTP 403 during testing. The international OWID refresh succeeded, but German figures and brand rankings cannot yet be guaranteed to update monthly. An alternative licensed machine-accessible German source or fixed VDA access is still needed. New calendar-year rollover logic has been tested.
+
+The public Vercel dashboard reads `web/market.json` and `web/global.json` directly from the current GitHub main branch on page load, with its last built snapshot as a fallback if the GitHub files are unavailable. Therefore validated data commits can appear on the **same live Vercel URL without a new deployment**. Code changes, unlike data changes, still require a Vercel redeployment.
+
+An older example workflow also lives inside this folder at `german-auto-pulse/.github/workflows/refresh-and-deploy.yml`; GitHub does not execute that nested file in the multi-project showcase repository.
 
 ## Portfolio story
 
