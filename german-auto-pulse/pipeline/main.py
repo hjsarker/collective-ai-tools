@@ -129,14 +129,15 @@ def update(html: str, current: dict) -> tuple[dict, bool]:
         raise ValueError(f"Source is older ({parsed['period']}) than snapshot ({old_period})")
     if parsed["period"] == old_period and all(current["latest"].get(k) == v for k, v in parsed.items() if k != "period"):
         return current, False
-    if parsed["period"][:4] != old_period[:4]:
-        raise ValueError("New calendar year requires explicit annual roll-over procedure")
     new = json.loads(json.dumps(current))
     period = parsed.pop("period")
     rows = {x["month"]: x["count"] for x in new["registrations_monthly"]}
     # A gap invalidates the snapshot rather than backfilling invented values.
     last = max(rows)
-    expected_next = f"{int(last[:4]):04d}-{int(last[5:])+1:02d}"
+    last_year, last_month = map(int, last.split("-"))
+    next_year = last_year + (1 if last_month == 12 else 0)
+    next_month = 1 if last_month == 12 else last_month + 1
+    expected_next = f"{next_year:04d}-{next_month:02d}"
     if period not in rows and period != expected_next:
         raise ValueError(f"Missing intermediate months before {period}")
     rows[period] = parsed["registrations"]
